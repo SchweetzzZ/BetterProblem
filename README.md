@@ -11,6 +11,7 @@ bun create elysia End_clone
 bun drizzle-kit init
 bun add drizzle-orm pg
 bun add -D drizzle-kit @types/pg
+bun add @elysiajs/cors
 ```
 
 

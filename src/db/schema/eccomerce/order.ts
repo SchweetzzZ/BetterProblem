@@ -1,5 +1,5 @@
 import { pgTable,  serial, integer, decimal, varchar, json, timestamp } from "drizzle-orm/pg-core";
-import { user } from "./auth-schema";
+import { user } from "./auth-schema"
 
 export const tableOrder = pgTable ("order", {
     id: serial("id").primaryKey(),
