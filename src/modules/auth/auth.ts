@@ -1,15 +1,13 @@
-import { betterAuth, BetterAuthError } from "better-auth"
+import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { db } from "../../db"
-import { env } from "../../env"
-import { authSchemas, user } from "../../db/schema/eccomerce/auth-schema"
-
+import { authSchema } from "../../db/schema/eccomerce/auth-schema"
 
 export const auth = betterAuth({
-    basePath: "/auth",
+    basepath: "/auth",
     database: drizzleAdapter(db, {
-        schema: authSchemas,
-        provider: "pg"
+        provider: "pg",
+        schema: authSchema
 }),
     emailAndPassword: {
         enabled: true,
@@ -28,12 +26,6 @@ export const auth = betterAuth({
             
         }
     },
-    secret: env.BETTER_AUTH_SECRET!, 
+    secret: process.env.BETTER_AUTH_SECRET!, 
     trustHost: true,
 })
-
-
-
-if (BetterAuthError) {
-    console.log("Auth configurado")
-}

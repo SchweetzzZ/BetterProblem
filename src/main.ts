@@ -10,11 +10,10 @@ const app = new Elysia()
   }))
   .get("/health", () => ({ status: "OK", message: "Server is running" }));
 
-
-//colocar rotas
-app.get("/auth_test", async () => {
-  return { message: "Auth configurado"}
-})
+  
+  app.get("/auth_test", async () => {
+    return { message: "Auth configurado"}
+  })
 .mount(auth.handler)
 .listen(3000, () => {
   console.log(

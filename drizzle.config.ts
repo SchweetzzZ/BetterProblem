@@ -13,4 +13,5 @@ export default {
     database: process.env.PG_DB || 'postgres',
     ssl: false
   },
+  tablesFilter: ["!user", "!session", "!account", "!verification"],
 } satisfies Config;
