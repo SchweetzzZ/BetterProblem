@@ -22,6 +22,9 @@ export const gettAllProducts = async () =>{
 
 export const getProductById = async (id:number) => {
     const result = await db.select().from(tableproducts).where(eq(tableproducts.id, id))
+    if (id < 0) {
+        throw new Error("ID inválido")
+    }
     if (!result) {
         throw new Error("Product not found")
     }
@@ -39,7 +42,7 @@ export const createProduct = async (product: CreateProductInput) => {
     if(isNaN(Number(product.stock))) {
       throw new Error("Estoque inválido")
     }
-    const create = await db.insert(tableproducts).values(product)
+    const create = await db.insert(tableproducts).values(product).returning()
     if (!create) {
         throw new Error("Product not created")
     }
@@ -52,7 +55,7 @@ export const updateProduct = async (id: number, product: Partial<CreateProductIn
     if (!updat || updat.length === 0) {
         throw new Error("Product not found")
     }
-    
+
     return {success: true, 
       message: "Product atualizado com sucesso", 
       data: updat[0]}

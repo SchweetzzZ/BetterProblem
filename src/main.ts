@@ -2,6 +2,7 @@ import { Elysia } from "elysia";
 import {cors} from "@elysiajs/cors"
 import { auth } from "./modules/auth/auth"
 import { productsRoutes,  } from "./modules/products/routes"
+import { categoryRoutes } from "./modules/category/routes"
 
 const app = new Elysia()
   .use(cors({
@@ -16,6 +17,9 @@ const app = new Elysia()
     return { message: "Auth configurado"}
   })
   .use(productsRoutes)
+  .use(categoryRoutes)
+
+
 .mount(auth.handler)
 .listen(3000, () => {
   console.log(
