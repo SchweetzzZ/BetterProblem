@@ -15,6 +15,13 @@
       "when": 1760356717575,
       "tag": "0001_remove-nome-field",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1760452993774,
+      "tag": "0002_rename-producuct-to-product",
+      "breakpoints": true
     }
   ]
 }
