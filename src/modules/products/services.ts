@@ -2,100 +2,83 @@ import { db } from '../../db';
 import { tableproducts } from '../../db/schema/eccomerce/products';
 import { eq } from 'drizzle-orm';
 
-//interface para criar o produto
-export interface CreateProductInput {
-    nome: string
-    price: string
-    description: string
-    image: string
-    stock: number
-    category: string
-}
-
-export const gettAllProducts = async () =>{
-    const result = await db.select().from(tableproducts)
-    if (!result) {
-        throw new Error("Products not found")
-    }
-    return result
-}
-
-export const getProductById = async (id:number) => {
-    const result = await db.select().from(tableproducts).where(eq(tableproducts.id, id))
-    if (id < 0) {
-        throw new Error("ID inválido")
-    }
-    if (!result) {
-        throw new Error("Product not found")
-    }
-    return result
-
+export type CreateProductInput = {
+  nome: string
+  price: number
+  description: string
+  image: string
+  stock: number
+  category: string
 }
 
 export const createProduct = async (product: CreateProductInput) => {
-    if (!product.nome || !product.price || !product.description || !product.image) {
-      throw new Error("Produtos obrigatórios faltando")
-    }
-    if(isNaN(Number(product.price))) {
-      throw new Error("Preço inválido")
-    }
-    if(isNaN(Number(product.stock))) {
-      throw new Error("Estoque inválido")
-    }
-    const create = await db.insert(tableproducts).values(product).returning()
-    if (!create) {
-        throw new Error("Product not created")
-    }
-    return create
+  const create = await db
+    .insert(tableproducts)
+    .values({
+      ...product,
+      price: product.price.toString(),
+    })
+    .returning();
+
+  if (!create || create.length === 0) {
+    throw new Error("Produto nao criado");
+  }
+
+  return create[0] ?? null;
 }
 
 export const updateProduct = async (id: number, product: Partial<CreateProductInput>) => {
-    const updat= await db.update(tableproducts).set(product).where(eq(tableproducts.id, id)).returning()
+  const updateData: any = {};
+  
+  if (product.nome !== undefined) updateData.nome = product.nome;
+  if (product.price !== undefined) updateData.price = product.price.toString();
+  if (product.description !== undefined) updateData.description = product.description;
+  if (product.image !== undefined) updateData.image = product.image;
+  if (product.stock !== undefined) updateData.stock = product.stock;
+  if (product.category !== undefined) updateData.category = product.category;
 
-    if (!updat || updat.length === 0) {
-        throw new Error("Product not found")
-    }
+  const update = await db
+    .update(tableproducts)
+    .set(updateData)
+    .where(eq(tableproducts.id, id))
+    .returning()
 
-    return {success: true, 
-      message: "Product atualizado com sucesso", 
-      data: updat[0]}
+  if (!update || update.length === 0) {
+    throw new Error("Produto nao encontrado")
+  }
+
+  return {
+    success: true,
+    message: "Produto atualizado com sucesso",
+    data: update[0] ?? null
+  }
+}
+
+export const gettAllProducts = async () => {
+  const result = await db.select().from(tableproducts)
+  if (!result || result.length === 0) {
+    throw new Error("Products not found")
+  }
+  return result
+}
+
+export const getProductById = async (id: number) => {
+  const result = await db.select().from(tableproducts).where(eq(tableproducts.id, id))
+  if (!result || result.length === 0) {
+    throw new Error("Produto nao encontrado")
+  }
+  return result
 }
 
 export const deletProducts = async (id: number) => {
-    const delet = await db.delete(tableproducts).where(eq(tableproducts.id, id))
-    if (!delet) {
-        throw new Error("Product not deleted")
-    }
-    return delet
+  const deleted = await db
+    .delete(tableproducts)
+    .where(eq(tableproducts.id, id))
+    .returning()
+
+  if (!deleted || deleted.length === 0) {
+    throw new Error("Product not found or not deleted");
+  }
+
+  return deleted[0]
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-
-export const db = drizzle(pool);*/
