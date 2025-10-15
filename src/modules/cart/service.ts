@@ -8,46 +8,39 @@ interface CreateCartInput {
     quantity: number
 }
 
+
+
 export const createCart = async (cart: CreateCartInput) => {
-    if (isNaN(Number(cart.user_id))) {
-        throw new Error("User ID inválido")
-    }
-    if (isNaN(Number(cart.producuct_id)) || cart.producuct_id <= 0) {
-        throw new Error("Product ID inválido")
-    }
-    if (isNaN(Number(cart.quantity)) || cart.quantity <= 0) {
-        throw new Error("Quantity inválida")
-    }
     const create = await db.insert(tablecart).values(cart).returning()
-    if (!create) {
+    if (!create || create.length === 0) {
         throw new Error("Cart not created")
     }
-    return create
+    return create[0] ?? null
 }
 export const updateCart = async (id: number, cart: Partial<CreateCartInput>) => {
     const update = await db.update(tablecart).set(cart).where(eq(tablecart.id,id)).returning()
-    if (!update) {
+    if (!update || update.length === 0) {
         throw new Error("Cart not updated")
     }
-    return update
+    return update[0] ?? null
 }
 export const deletCart = async (id: number) => {
     const delet = await db.delete(tablecart).where(eq(tablecart.id,id)).returning()
-    if (!delet) {
+    if (!delet || delet.length === 0) {
         throw new Error("Cart not deleted")
     }
-    return delet
+    return delet[0] ?? null
 }
 export const getCartById = async (id: number) => {
     const result = await db.select().from(tablecart).where(eq(tablecart.id,id))
-    if (!result) {
+    if (!result || result.length === 0) {
         throw new Error("Cart not found")
     }
-    return result
+    return result[0] ?? null
 }
 export const getAllCart = async () => {
     const result = await db.select().from(tablecart)
-    if (!result) {
+    if (!result || result.length === 0) {
         throw new Error("Cart not found")
     }
     return result
