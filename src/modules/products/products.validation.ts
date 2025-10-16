@@ -13,7 +13,7 @@ export const createProductValidation = t.Object({
 
 export const updateProductValidation = t.Partial(createProductValidation)
 
-// Use t.String() para params e converta no controller
+// Use t.String() para params e converter no controller
 export const idParamsValidation = t.Object({
     id: t.String() // Mude para String
   });

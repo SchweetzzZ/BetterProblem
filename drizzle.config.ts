@@ -11,7 +11,9 @@ export default {
     user: process.env.PG_USER || 'postgres',
     password: process.env.PG_PASSWORD || 'polegadas5000',
     database: process.env.PG_DB || 'postgres',
-    ssl: false
+    ssl: false,
   },
+  verbose: true,
+  strict: true,
   tablesFilter: ["!user", "!session", "!account", "!verification"],
 } satisfies Config;
