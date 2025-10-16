@@ -1,5 +1,6 @@
 import { pgTable,  serial, integer, decimal, varchar, json, timestamp } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema"
+import { tableproducts } from "./products"
 
 export const tableOrder = pgTable ("order", {
     id: serial("id").primaryKey(),
@@ -9,3 +10,5 @@ export const tableOrder = pgTable ("order", {
     itens: json("itens").notNull(),
     creat_at: timestamp("create_at").defaultNow()
 })
+
+
