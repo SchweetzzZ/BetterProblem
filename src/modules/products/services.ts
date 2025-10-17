@@ -71,10 +71,7 @@ export const getProductById = async (id: number) => {
 }
 
 export const deletProducts = async (id: number) => {
-  const deleted = await db
-    .delete(tableproducts)
-    .where(eq(tableproducts.id, id))
-    .returning()
+  const deleted = await db.delete(tableproducts).where(eq(tableproducts.id, id)).returning()
 
   if (!deleted || deleted.length === 0) {
     throw new Error("Product not found or not deleted");
