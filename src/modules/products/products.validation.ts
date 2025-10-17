@@ -7,8 +7,6 @@ export const createProductValidation = t.Object({
     image: t.String({maxLength: 255}),
     category: t.String({maxLength: 255}),
     stock: t.Number({precision: 10, scale: 2}),
-    create_at: t.Date(),
-    update_at: t.Date()
 })
 
 export const updateProductValidation = t.Partial(createProductValidation)

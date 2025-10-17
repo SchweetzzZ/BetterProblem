@@ -3,6 +3,8 @@ import {cors} from "@elysiajs/cors"
 import { auth } from "./modules/auth/auth"
 import { productsRoutes,  } from "./modules/products/routes"
 import { categoriesRoutes } from "./modules/category/routes"
+import { cartRoutes } from "./modules/cart/routes"
+import { orderRoutes } from "./modules/order/routes"
 
 
 const app = new Elysia()
@@ -19,6 +21,8 @@ const app = new Elysia()
   })
   .use(productsRoutes)
   .use(categoriesRoutes)
+  .use(cartRoutes)
+  .use(orderRoutes)
  
 
 .mount(auth.handler)
