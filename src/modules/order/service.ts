@@ -16,8 +16,6 @@ export interface OrderItem {
     product_id: number
     quantity: number
     price: number
-    name: string
-    imageURL: string
 }
 
 export type OrderStatus = "pending" | "completed" | "cancelled" | "shipped" | "delivered" | "cancelled"
@@ -68,8 +66,6 @@ export const createOrder = async (order: CreateOrderInput) => {
         product_id: item.product_id,
         quantity: item.quantity,
         price: item.price.toString(),
-        name: item.name,
-        image: item.imageURL
     }))
     await db.insert(orderItens).values(orderItems)
 

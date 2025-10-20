@@ -6,8 +6,6 @@ export const  createOrderValidation = t.Object({
         product_id: t.Number(),
         quantity: t.Number(),
         price: t.Number(),
-        name: t.String(),
-        imageURL: t.String(),
     })),
     total: t.Number(),
     status: t.Union([
