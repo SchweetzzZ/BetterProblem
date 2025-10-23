@@ -5,7 +5,8 @@ import { productsRoutes,  } from "./modules/products/routes"
 import { categoriesRoutes } from "./modules/category/routes"
 import { cartRoutes } from "./modules/cart/routes"
 import { orderRoutes } from "./modules/order/routes"
-
+import { stripeWebhookRoutes } from "./modules/stripe/routes"
+import { stripeFinalRoute } from "./modules/stripe/routes"
 
 const app = new Elysia()
   .use(cors({
@@ -13,19 +14,15 @@ const app = new Elysia()
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type, Authorization"],
   }))
-  .get("/health", () => ({ status: "OK", message: "Server is running" }));
+  .get("/health", () => ({ status: "OK", message: "Server is running" }))
 
-  
-  app.get("/auth_test", async () => {
-    return { message: "Auth configurado"}
-  })
   .use(productsRoutes)
   .use(categoriesRoutes)
   .use(cartRoutes)
   .use(orderRoutes)
- 
-
-.mount(auth.handler)
+  .use(stripeWebhookRoutes)
+  .use(stripeFinalRoute)
+  .mount(auth.handler)
 .listen(3000, () => {
   console.log(
     `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
