@@ -13,19 +13,6 @@ export const auth = betterAuth({
         enabled: true,
         requireEmailVerification: false,
     },
-    user: {
-        additionalFields: {
-            nome: {
-                type: "string",
-                required: true,
-            },
-            nascimento: {
-                type: "string",
-                required: true,
-            },
-            
-        }
-    },
     secret: process.env.BETTER_AUTH_SECRET!, 
     trustHost: true,
 })

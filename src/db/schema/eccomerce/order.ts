@@ -1,10 +1,10 @@
-import { pgTable,  serial, integer, decimal, varchar, json, timestamp } from "drizzle-orm/pg-core";
+import { pgTable,  serial, integer, decimal, varchar, json, timestamp, text } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema"
 import { tableproducts } from "./products"
 
 export const tableOrder = pgTable ("order", {
     id: serial("id").primaryKey(),
-    user_id: integer("user_id").notNull().references(() => user.id),
+    user_id: text("user_id").notNull().references(() => user.id),
     total: decimal("total", {precision: 10, scale: 2}).notNull(),
     status: varchar("status", {length: 255}).default("pending"),
     itens: json("itens").notNull(),

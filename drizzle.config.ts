@@ -15,5 +15,5 @@ export default {
   },
   verbose: true,
   strict: true,
-  tablesFilter: ["!user", "!session", "!account", "!verification"],
+  //tablesFilter: ["!user", "!session", "!account", "!verification"],
 } satisfies Config;
