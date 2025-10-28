@@ -12,7 +12,7 @@ interface PaymentItem {
 
 export class StripeService {
   static async createCheckoutSession(orderId: number, items: PaymentItem[]) {
-    console.log("🟢 [StripeService] Criando sessão de pagamento para orderId:", orderId);
+    console.log("Criando sessão de pagamento para orderId:", orderId);
 
     if (!items || items.length === 0) {
       console.warn("⚠️ Nenhum item enviado para o checkout Stripe.");

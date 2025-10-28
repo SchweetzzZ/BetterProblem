@@ -25,7 +25,7 @@ export const createOrder = async (order: CreateOrderInput) => {
     if (!order.itens || order.itens.length === 0) {
         throw new Error("Itens do pedido não fornecidos")
     }
-    //olhar se os produtos existem
+    //verify if products exists
     const productIds = order.itens.map(itens => itens.product_id)
 
     const existingProducts = await db.select({
@@ -50,7 +50,7 @@ export const createOrder = async (order: CreateOrderInput) => {
     }
 
     const [newOrder] = await db.insert(tableOrder).values({
-        user_id: Number(order.user_id),
+        user_id: order.user_id,
         total: order.total.toString(),
         status: order.status || "pending",
         itens: order.itens, 
@@ -73,7 +73,7 @@ export const createOrder = async (order: CreateOrderInput) => {
 }
 export const updateOrder = async (id: number, order: Partial<CreateOrderInput>) => {
     const updatedOrder = await db.update(tableOrder).set({
-        user_id: Number(order.user_id),
+        user_id: order.user_id,
         total: order.total?.toString(),
         status: order.status || "pending",
         itens: order.itens,

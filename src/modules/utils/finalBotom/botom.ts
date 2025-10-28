@@ -7,11 +7,11 @@ import { eq, and, gte, sql } from "drizzle-orm";
 import { StripeService } from "../../stripe/service";
 
 export const finalizarCompraService = async (user_id: string) => {
-  console.log("🟢 [SERVICE] Iniciando finalização de compra para usuário:", user_id);
+  console.log("[SERVICE] Iniciando finalização de compra para usuário:", user_id);
 
   try {
     const result = await db.transaction(async (tx) => {
-      console.log("🔍 Buscando carrinho do usuário...");
+      console.log("Buscando carrinho do usuário...");
 
       // 1️⃣ Busca o carrinho
       const resultCart = await tx
@@ -20,17 +20,17 @@ export const finalizarCompraService = async (user_id: string) => {
         .where(eq(tablecart.user_id, user_id));
 
       if (resultCart.length === 0) {
-        console.warn("⚠️ CavrrinSho vazio para o usuário:", user_id);
+        console.warn("Carrinho vazio para o usuário:", user_id);
         throw new Error("Carrinho vazio");
       }
 
-      console.log(`🛒 ${resultCart.length} item(ns) encontrado(s) no carrinho.`);
+      console.log(`${resultCart.length} item(ns) encontrado(s) no carrinho.`);
 
       // 2️⃣ Valida estoque e calcula total
       let total = 0;
 
       for (const item of resultCart) {
-        console.log(`📦 Verificando estoque do produto ID ${item.producuct_id}...`);
+        console.log(`Verificando estoque do produto ID ${item.producuct_id}...`);
 
         const updatedRows = await tx
           .update(tableproducts)
@@ -45,7 +45,7 @@ export const finalizarCompraService = async (user_id: string) => {
           );
 
         if (updatedRows.rowCount === 0) {
-          console.error(`❌ Estoque insuficiente para o produto ${item.producuct_id}`);
+          console.error(`Estoque insuficiente para o produto ${item.producuct_id}`);
           throw new Error(`Estoque insuficiente para o produto ${item.producuct_id}`);
         }
 
@@ -56,13 +56,13 @@ export const finalizarCompraService = async (user_id: string) => {
 
         total += Number(product.price) * item.quantity;
 
-        console.log(`✅ Estoque atualizado. Produto: ${product.nome}, Quantidade: ${item.quantity}`);
+        console.log(`Estoque atualizado. Produto: ${product.nome}, Quantidade: ${item.quantity}`);
       }
 
-      console.log("💰 Total calculado:", total);
+      console.log("Total calculado:", total);
 
       // 3️⃣ Monta os itens para salvar no pedido
-      console.log("🧩 Montando itens do pedido...");
+      console.log("Montando itens do pedido...");
       const itensJSON = await Promise.all(
         resultCart.map(async (item) => {
           const [product] = await tx
@@ -80,7 +80,7 @@ export const finalizarCompraService = async (user_id: string) => {
       );
 
       // 4️⃣ Cria o pedido
-      console.log("📝 Criando pedido no banco...");
+      console.log(" Criando pedido no banco...");
       const [order] = await tx
         .insert(tableOrder)
         .values({
@@ -92,7 +92,7 @@ export const finalizarCompraService = async (user_id: string) => {
         })
         .returning();
 
-      console.log("✅ Pedido criado com ID:", order.id);
+      console.log("Pedido criado com ID:", order.id);
 
       // 5️⃣ Cria registros de itens
       const orderItemsData = itensJSON.map((item) => ({
@@ -102,15 +102,15 @@ export const finalizarCompraService = async (user_id: string) => {
         price: item.price.toString(),
       }));
 
-      console.log(`🧾 Inserindo ${orderItemsData.length} item(ns) em order_items...`);
+      console.log(`Inserindo ${orderItemsData.length} item(ns) em order_items...`);
       await tx.insert(orderItens).values(orderItemsData);
 
       // 6️⃣ Limpa o carrinho
-      console.log("🧹 Limpando carrinho do usuário...");
+      console.log("Limpando carrinho do usuário...");
       await tx.delete(tablecart).where(eq(tablecart.user_id, user_id));
 
       // 7️⃣ Cria sessão Stripe
-      console.log("💳 Criando sessão de pagamento na Stripe...");
+      console.log("Criando sessão de pagamento na Stripe...");
       const stripeSession = await StripeService.createCheckoutSession(
         order.id,
         itensJSON.map((item) => ({
@@ -121,7 +121,7 @@ export const finalizarCompraService = async (user_id: string) => {
         }))
       );
 
-      console.log("✅ Sessão Stripe criada com sucesso:", stripeSession.url);
+      console.log("Sessão Stripe criada com sucesso:", stripeSession.url);
 
       // 8️⃣ Retorna sucesso
       return {
@@ -133,10 +133,10 @@ export const finalizarCompraService = async (user_id: string) => {
       };
     });
 
-    console.log("🎯 Transação finalizada com sucesso!");
+    console.log("Transação finalizada com sucesso!");
     return result;
   } catch (error) {
-    console.error("❌ ERRO FATAL na finalização de compra:", error);
+    console.error("ERRO FATAL na finalização de compra:", error);
     throw new Error("Falha ao processar a compra. Verifique os logs do servidor.");
   }
 };
