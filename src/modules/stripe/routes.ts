@@ -1,8 +1,6 @@
 import { Elysia } from "elysia";
-import { createCheckoutSessionController } from "./controllers";
-import { stripeCheckoutValidation } from "./stripe.validation";
-import { handleWebhookController } from "./controllers";
-import { stripeWebhookValidation } from "./stripe.validation";
+import { createCheckoutSessionController, handleWebhookController } from "./controllers";
+import { stripeCheckoutValidation, stripeWebhookValidation } from "./stripe.validation";
 
 export const stripeFinalRoute = (app: Elysia) =>
   app.post(
@@ -13,11 +11,12 @@ export const stripeFinalRoute = (app: Elysia) =>
     }
   );
 
-  export const stripeWebhookRoutes = (app: Elysia) =>
-    app.post(
-      "/webhook",
-      handleWebhookController,
-      {
-        headers: stripeWebhookValidation.headers
-      }
-    );
+export const stripeWebhookRoutes = (app: Elysia) =>
+  app.post(
+    "/webhook",
+    handleWebhookController,
+    {
+      // ✅ CORRIGIDO: stripeWebhookValidation existe agora
+      headers: stripeWebhookValidation.headers
+    }
+  );

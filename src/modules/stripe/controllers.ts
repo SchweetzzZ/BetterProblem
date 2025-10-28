@@ -1,30 +1,22 @@
 import { Context } from "elysia";
 import { StripeService } from "./service";
+import { finalizarCompraService } from "../utils/finalBotom/botom"; // ✅ ADICIONE ESTA IMPORT
 import { stripeCheckoutValidation, stripeWebhookValidation } from "./stripe.validation";
 
 type CheckoutBody = typeof stripeCheckoutValidation.static;
 
 export const createCheckoutSessionController = async (ctx: Context<{ body: CheckoutBody }>) => {
   try {
-    const { orderId, items } = ctx.body;
+    const { user_id } = ctx.body; // ✅ AGORA USA user_id
 
-    // Validação adicional do carrinho
-    if (!items || items.length === 0) {
-      ctx.set.status = 400;
-      return {
-        success: false,
-        message: "Carrinho vazio - não é possível criar sessão de pagamento",
-        data: null
-      };
-    }
-
-    const session = await StripeService.createCheckoutSession(orderId, items);
+    // Chama o service correto que processa o carrinho
+    const result = await finalizarCompraService(user_id); // ✅ USA O SERVICE QUE VOCÊ CRIOU
 
     ctx.set.status = 201;
     return {
       success: true,
       message: "Sessão de checkout criada com sucesso",
-      data: session
+      data: result // ✅ RETORNA O RESULTADO DO SEU SERVICE
     };
 
   } catch (error: any) {
@@ -33,12 +25,13 @@ export const createCheckoutSessionController = async (ctx: Context<{ body: Check
     ctx.set.status = 500;
     return {
       success: false,
-      message: "Erro ao criar sessão de pagamento",
+      message: error.message || "Erro ao criar sessão de pagamento",
       data: null
     };
   }
 }
 
+// O handleWebhookController está correto, mantenha como está
 export const handleWebhookController = async (ctx: Context) => {
   try {
     const signature = ctx.headers['stripe-signature'];
@@ -52,9 +45,7 @@ export const handleWebhookController = async (ctx: Context) => {
       };
     }
 
-    // O body precisa ser raw para validação do Stripe
     const rawBody = await ctx.request.text();
-    
     const result = await StripeService.handleWebhook(rawBody, signature);
 
     ctx.set.status = 200;
