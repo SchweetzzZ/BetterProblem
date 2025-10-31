@@ -1,22 +1,22 @@
 import { Context } from "elysia";
 import { StripeService } from "./service";
-import { finalizarCompraService } from "../utils/finalBotom/botom"; // ✅ ADICIONE ESTA IMPORT
+import { finalizarCompraService } from "../utils/finalBotom/botom"; 
 import { stripeCheckoutValidation, stripeWebhookValidation } from "./stripe.validation";
 
 type CheckoutBody = typeof stripeCheckoutValidation.static;
 
 export const createCheckoutSessionController = async (ctx: Context<{ body: CheckoutBody }>) => {
   try {
-    const { user_id } = ctx.body; // ✅ AGORA USA user_id
+    const { user_id } = ctx.body; 
 
     // Chama o service correto que processa o carrinho
-    const result = await finalizarCompraService(user_id); // ✅ USA O SERVICE QUE VOCÊ CRIOU
+    const result = await finalizarCompraService(user_id);
 
     ctx.set.status = 201;
     return {
       success: true,
       message: "Sessão de checkout criada com sucesso",
-      data: result // ✅ RETORNA O RESULTADO DO SEU SERVICE
+      data: result 
     };
 
   } catch (error: any) {

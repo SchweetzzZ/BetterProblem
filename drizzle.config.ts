@@ -2,7 +2,7 @@ import type { Config } from 'drizzle-kit';
 
 
 export default {
-  schema: './src/db/schema/**/*.ts',
+  schema: './src/db/schema/eccomerce',
   out: './drizzle',
   dialect: 'postgresql',
   dbCredentials: {
@@ -10,10 +10,10 @@ export default {
     port: parseInt(process.env.PG_PORT || '5432'),
     user: process.env.PG_USER || 'postgres',
     password: process.env.PG_PASSWORD || 'polegadas5000',
-    database: process.env.PG_DB || 'postgres',
+    database: process.env.PG_DB || 'comercegres',
     ssl: false,
   },
   verbose: true,
   strict: true,
-  //tablesFilter: ["!user", "!session", "!account", "!verification"],
+  tablesFilter: ["account", "session", "user", "cart", "categories", "cupons", "order", "order_items", "products", "verification"],
 } satisfies Config;
