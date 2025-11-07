@@ -1,4 +1,4 @@
-import { createProduct, getProductById, updateProduct, deletProducts, gettAllProducts } from "./services";
+import { createProduct, getProductById, updateProduct, deletProducts, gettAllProducts, test } from "./services";
 import { Context } from "elysia"
 import { idParamsValidation, updateProductValidation } from "./products.validation"
 import { createProductValidation } from "./products.validation"
@@ -6,6 +6,15 @@ import { createProductValidation } from "./products.validation"
 type CreateProductBody = typeof createProductValidation.static;
 type UpdateProductBody = typeof updateProductValidation.static;
 type IdParams = typeof idParamsValidation.static;
+
+export const testController = async (ctx: Context) => {
+    test()
+    ctx.set.status = 200
+    return {
+        success: true,
+        message: "Teste realizado com sucesso",
+    }
+}
 
 export const createProductController = async (ctx: Context<{ body: CreateProductBody }>) => {
   const newProduct = await createProduct(ctx.body)

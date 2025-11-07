@@ -10,6 +10,9 @@ export type CreateProductInput = {
   stock: number
   category: string
 }
+export const test = () => {
+    console.log("test")
+}
 
 export const createProduct = async (product: CreateProductInput) => {
   const create = await db

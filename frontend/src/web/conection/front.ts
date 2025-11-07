@@ -1,0 +1,14 @@
+import { treaty } from "@elysiajs/eden";
+import { createCoreApi } from "../../../../src/main";
+import type { Coreapi } from "../../../../src/main";
+
+const url = import.meta.env.PROD 
+  ? "https://seu-dominio.com"  // string para produção
+  : "http://localhost:3000" // string para desenvolvimento
+
+export const apiCLient = treaty<Coreapi>(url,{
+    fetch: {
+        credentials: "include",
+        mode: "cors",
+    }
+})

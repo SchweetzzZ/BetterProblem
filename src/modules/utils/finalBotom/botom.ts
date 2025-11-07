@@ -5,15 +5,16 @@ import { tableOrder } from "../../../db/schema/eccomerce/order";
 import { orderItens } from "../../../db/schema/eccomerce/order_items";
 import { eq, and, gte, sql } from "drizzle-orm";
 import { StripeService } from "../../stripe/service";
+import { CouponService } from "../../cupom/cuponService";
 
 export const finalizarCompraService = async (user_id: string) => {
-  console.log("[SERVICE] Iniciando finalização de compra para usuário:", user_id);
+  console.log("Iniciando finalização de compra para usuário:", user_id);
 
   try {
     const result = await db.transaction(async (tx) => {
       console.log("Buscando carrinho do usuário...");
 
-      // 1️⃣ Busca o carrinho
+      // Busca o carrinho
       const resultCart = await tx
         .select()
         .from(tablecart)
@@ -26,7 +27,7 @@ export const finalizarCompraService = async (user_id: string) => {
 
       console.log(`${resultCart.length} item(ns) encontrado(s) no carrinho.`);
 
-      // 2️⃣ Valida estoque e calcula total
+      //  Valida estoque e calcula total
       let total = 0;
 
       for (const item of resultCart) {
@@ -61,7 +62,14 @@ export const finalizarCompraService = async (user_id: string) => {
 
       console.log("Total calculado:", total);
 
-      // 3️⃣ Monta os itens para salvar no pedido
+      let descont = 0
+
+      const coupon = await CouponService.validate("", total)
+      descont = CouponService.calcDiscount(total, coupon)
+      total = Math.max(0, total - descont)
+      await CouponService.incrementUse(coupon.id)
+
+      // Monta os itens para salvar no pedido
       console.log("Montando itens do pedido...");
       const itensJSON = await Promise.all(
         resultCart.map(async (item) => {
@@ -79,7 +87,7 @@ export const finalizarCompraService = async (user_id: string) => {
         })
       );
 
-      // 4️⃣ Cria o pedido
+      //  Cria o pedido
       console.log(" Criando pedido no banco...");
       const [order] = await tx
         .insert(tableOrder)
@@ -94,7 +102,7 @@ export const finalizarCompraService = async (user_id: string) => {
 
       console.log("Pedido criado com ID:", order.id);
 
-      // 5️⃣ Cria registros de itens
+      //  Cria registros de itens
       const orderItemsData = itensJSON.map((item) => ({
         order_id: order.id,
         product_id: item.product_id,
@@ -105,11 +113,11 @@ export const finalizarCompraService = async (user_id: string) => {
       console.log(`Inserindo ${orderItemsData.length} item(ns) em order_items...`);
       await tx.insert(orderItens).values(orderItemsData);
 
-      // 6️⃣ Limpa o carrinho
+      // Limpa o carrinho
       console.log("Limpando carrinho do usuário...");
       await tx.delete(tablecart).where(eq(tablecart.user_id, user_id));
 
-      // 7️⃣ Cria sessão Stripe
+      // Cria sessão Stripe
       console.log("Criando sessão de pagamento na Stripe...");
       const stripeSession = await StripeService.createCheckoutSession(
         order.id,
@@ -123,7 +131,7 @@ export const finalizarCompraService = async (user_id: string) => {
 
       console.log("Sessão Stripe criada com sucesso:", stripeSession.url);
 
-      // 8️⃣ Retorna sucesso
+      // Retorna sucesso
       return {
         success: true,
         message: "Pedido criado e sessão de pagamento iniciada com sucesso!",

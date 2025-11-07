@@ -4,7 +4,8 @@ import {
   getProductByIdController,
   updateProductController,
   deletProductsController,
-  gettAllProductsController 
+  gettAllProductsController,
+  testController 
 } from "./controllers"
 import { createProductValidation, updateProductValidation, idParamsValidation } from "./products.validation"
 
@@ -23,3 +24,4 @@ export const productsRoutes = (app: Elysia) => app
   .delete("/products/:id", deletProductsController, {
     params: idParamsValidation
   })
+  .get("/products/test", testController)

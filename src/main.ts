@@ -8,7 +8,8 @@ import { orderRoutes } from "./modules/order/routes"
 import { stripeWebhookRoutes } from "./modules/stripe/routes"
 import { stripeFinalRoute } from "./modules/stripe/routes"
 
-const app = new Elysia()
+export const createCoreApi = () => {
+    const app = new Elysia()
   .use(cors({
     origin: "*",//lembrar de alterar em produção
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -16,18 +17,14 @@ const app = new Elysia()
   }))
   .get("/health", () => ({ status: "OK", message: "Server is running" }))
 
+  .mount(auth.handler)
   .use(productsRoutes)
   .use(categoriesRoutes)
   .use(cartRoutes)
   .use(orderRoutes)
-  .use(stripeWebhookRoutes)
-  .use(stripeFinalRoute)
-  .mount(auth.handler)
-.listen(3000, () => {
-  console.log(
-    `Elysia is running at 'http://localhost:3000'`
-  );
-});
+  //.use(stripeWebhookRoutes)
+  //.use(stripeFinalRoute)
 
-
-
+  return app
+}
+export type Coreapi = Awaited<ReturnType<typeof createCoreApi>>//precisa chamar uma função.
