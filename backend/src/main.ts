@@ -1,7 +1,7 @@
 import { Elysia } from "elysia";
 import {cors} from "@elysiajs/cors"
 import { auth } from "./modules/auth/auth"
-import { productsRoutes,  } from "./modules/products/routes"
+import { productsRoutes } from "./modules/products/routes"
 import { categoriesRoutes } from "./modules/category/routes"
 import { cartRoutes } from "./modules/cart/routes"
 import { orderRoutes } from "./modules/order/routes"
@@ -22,8 +22,8 @@ export const createCoreApi = () => {
   .use(categoriesRoutes)
   .use(cartRoutes)
   .use(orderRoutes)
-  //.use(stripeWebhookRoutes)
-  //.use(stripeFinalRoute)
+  .use(stripeWebhookRoutes)
+  .use(stripeFinalRoute)
 
   return app
 }
