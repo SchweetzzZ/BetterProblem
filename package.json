@@ -4,11 +4,14 @@
     "workspaces": ["backend", "frontend"],
     "private": true,
     "scripts": {
-      "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
-      "build": "npm run build --workspaces",
-      "install:all": "npm install"
+        "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
+        "build": "npm run build --workspaces",
+        "install:all": "npm install"
     },
     "devDependencies": {
-      "concurrently": "^7.6.0"
+        "concurrently": "^7.6.0"
+    },
+    "dependencies": {
+        "react-router-dom": "^7.9.6"
     }
-  }
+}

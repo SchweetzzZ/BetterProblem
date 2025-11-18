@@ -1,0 +1,21 @@
+# Ignorar qualquer node_modules em qualquer lugar
+**/node_modules/
+
+# Ignorar builds
+**/dist/
+**/build/
+
+# Ignorar envs
+.env
+**/.env
+**/.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+bun-debug.log*
+
+# Sistema
+.DS_Store
+Thumbs.db

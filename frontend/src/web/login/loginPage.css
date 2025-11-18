@@ -1,0 +1,92 @@
+/* Reset básico para remover margens, padding e garantir que box-sizing funcione */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Área geral da tela — ocupa a tela toda e centraliza o conteúdo */
+.backGroundGeral {
+    height: 100vh;                       /* ocupa a tela inteira */
+    display: flex;                        /* ativa o flexbox */
+    justify-content: center;              /* centraliza horizontalmente */
+    align-items: center;                  /* centraliza verticalmente */
+    background: #e0e0e0;                  /* fundo cinza claro */
+    font-family: Arial, Helvetica, sans-serif; /* fonte padrão limpa */
+}
+
+/* Card da tela de login — onde o conteúdo fica */
+.container {
+    background-color: #1a1a1a;            /* fundo escuro profissional */
+    padding: 40px;                        /* espaço interno */
+    width: 350px;                         /* largura padrão de card */
+    border-radius: 12px;                  /* bordas arredondadas */
+    box-shadow: 0 0 20px rgba(0,0,0,0.4); /* sombra suave */
+}
+
+/* Título da página */
+.titulo {
+    text-align: center;                   /* centraliza o texto */
+    color: #ffffff;                       /* cor branca */
+    font-size: 32px;                      /* tamanho grande do título */
+    margin-bottom: 20px;                  /* espaço abaixo do título */
+}
+
+/* Formulário — itens empilhados verticalmente */
+.login-Form {
+    display: flex;                        /* flexbox */
+    flex-direction: column;               /* coloca itens em coluna */
+    gap: 20px;                            /* espaço entre os groups */
+}
+
+/* Grupo que envolve label + input */
+.form-group {
+    display: flex;                        
+    flex-direction: column;               /* label em cima do input */
+}
+
+/* Label do campo */
+.form-label {
+    color: #bbbbbb;                       /* cinza claro */
+    margin-bottom: 6px;                   /* espaço entre label e input */
+    font-size: 16px;
+}
+
+/* Campo de input */
+.form-input {
+    padding: 10px;                        /* tamanho do input */
+    border-radius: 6px;                   /* bordas arredondadas */
+    border: 1px solid #333;               /* borda discreta */
+    background-color: #2b2b2b;            /* fundo escuro do input */
+    color: #fff;                          /* texto branco */
+    font-size: 15px;
+}
+
+/* Campo focado */
+.form-input:focus {
+    outline: none;                         /* remove borda azul padrão */
+    border-color: #6c63ff;                 /* borda roxa moderna */
+    box-shadow: 0 0 6px #6c63ff;           /* brilho na borda */
+}
+
+/* Botão de entrar */
+.form-button {
+    padding: 12px;                         /* altura do botão */
+    border: none;                          /* remove borda padrão */
+    border-radius: 6px;                    /* bordas arredondadas */
+    background-color: #6c63ff;             /* cor principal */
+    color: #fff;                           /* texto branco */
+    font-size: 18px;                       /* fonte maior */
+    cursor: pointer;                       /* cursor de click */
+    transition: 0.2s;                      /* efeito suave no hover */
+}
+
+/* Botão quando passa o mouse */
+.form-button:hover {
+    background-color: #5850d4;             /* cor mais escura no hover */
+}
+
+/* Botão sendo pressionado */
+.form-button:active {
+    transform: scale(0.97);                /* leve “click” */
+}
