@@ -1,7 +1,10 @@
 {
     "name": "betterproblem",
     "version": "1.0.0",
-    "workspaces": ["backend", "frontend"],
+    "workspaces": [
+        "backend",
+        "frontend"
+    ],
     "private": true,
     "scripts": {
         "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",

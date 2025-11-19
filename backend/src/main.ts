@@ -10,9 +10,10 @@ import { stripeWebhookRoutes, stripeFinalRoute } from "./modules/stripe/routes"
 export const createCoreApi = () => {
     const app = new Elysia()
   .use(cors({
-    origin: "*",//lembrar de alterar em produção
+    origin: "http://localhost:5173",//lembrar de alterar em produção
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type, Authorization"],
+    allowedHeaders: ["Content-Type, Authorization"]
   }))
   .get("/health", () => ({ status: "OK", message: "Server is running" }))
 
@@ -21,8 +22,8 @@ export const createCoreApi = () => {
   .use(categoriesRoutes)
   .use(cartRoutes)
   .use(orderRoutes)
-  .use(stripeWebhookRoutes)
-  .use(stripeFinalRoute)
+  //.use(stripeWebhookRoutes)
+  //.use(stripeFinalRoute)
 
   return app
 }
