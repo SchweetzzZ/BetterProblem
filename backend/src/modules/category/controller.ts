@@ -1,13 +1,14 @@
-import { createCategory, getCategoryById, categoryAll, updateCategory, deletCategory } from "./service"
+import { createCategory, getCategoryById, categoryAll, updateCategory, deletCategory, getCategoryByName } from "./service"
 import type { Context } from "elysia"
-import {createCategoryValidation, updateCategoryValidation, idParamsValidation} from "./category.validation"
-import {tablecategories} from "../../db/schema/eccomerce/categories"
+import {createCategoryValidation, updateCategoryValidation, idParamsValidation, nameParamsValidation} from "./category.validation"
+import {tablecategories} from "../../db/schema/eccomerce/categories"    
 import { eq } from "drizzle-orm"
 import { db } from "../../db"
 
 type createCategoryParams = typeof createCategoryValidation.static;
 type updateCategoryParams = typeof updateCategoryValidation.static;
 type IdParams = typeof idParamsValidation.static;
+type nameParams = typeof nameParamsValidation.static;
 
 export const createCategoryController = async (ctx: Context<{ body: createCategoryParams }>) => {
     const newCategory = await createCategory(ctx.body)
@@ -85,6 +86,40 @@ export const deletCategoryController = async (ctx: Context<{ params: IdParams }>
         return {
             success: false,
             message: "Erro interno ao deletar categoria",
+            data: null,
+        }
+    }
+}
+export const getCategoryByNameController = async (ctx: Context<{ params: nameParams }>) => {
+    try {
+        const { name } = ctx.params 
+        
+        console.log('🔍 [BACKEND] Buscando categoria por nome:', name)
+        
+        // ✅ USA O NAME DIRETO - SEM CONVERSÃO
+        const result = await getCategoryByName(name)
+
+        if (!result) {
+            ctx.set.status = 404
+            return {
+                success: false,
+                message: "Category não foi encontrada",
+                data: null
+            }
+        }
+        
+        ctx.set.status = 200
+        return {
+            success: true,
+            message: "Category encontrada com sucesso",
+            data: result
+        }
+    } catch (err: any) {
+        console.error(`[getCategoryByNameController] Erro ao buscar categoria por nome`, err)
+        ctx.set.status = 500
+        return {
+            success: false,
+            message: "Erro interno ao buscar categoria",
             data: null,
         }
     }

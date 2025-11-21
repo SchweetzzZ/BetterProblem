@@ -38,6 +38,14 @@ export const categoryAll = async () => {
     }
     return result
 }
+export const getCategoryByName = async (name:string) => {
+    const res = await db.select().from(tablecategories).where(eq(tablecategories.name, name))
+    if (!res || res.length === 0) {
+        throw new Error("Category não foi encontrada")
+    }
+    return res[0] ?? null
+    
+}
 
 export const deletCategory = async (id: number) => {
     const delet = await db.delete(tablecategories).where(eq(tablecategories.id,id)).returning()

@@ -17,7 +17,7 @@ export default function LoginPage() {
         
         try {
             await login(email, password)
-            navigate('/dashboard') // Redireciona após login
+            navigate('/') // Redireciona após login
         } catch (err: any) {
             setError(err.message)
         } finally {

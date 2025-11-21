@@ -10,3 +10,6 @@ export const updateCategoryValidation = t.Partial(createCategoryValidation);
 export const idParamsValidation = t.Object({
     id: t.Numeric()
 });
+export const nameParamsValidation = t.Object({
+    name: t.String()
+})
