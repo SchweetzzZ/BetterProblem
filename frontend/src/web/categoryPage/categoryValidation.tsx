@@ -11,5 +11,5 @@ export interface Category {
     error: string | null
     categories: Category[]
     onOpen: () => void
-    onClose: () => void
+    onClose: () => void 
   }
