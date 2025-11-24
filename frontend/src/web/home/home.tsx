@@ -2,7 +2,7 @@ import './homePage.css'
 import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { useCategories } from '../categoryPage/hooksCategory'
-import { CategoriesDropdown } from '../categoryPage/categoryDropown'
+import { CategoriesDropdown } from '../componentes/categoryDropown'
 
 export const HomePage = () => {
   const { categories, isLoading, error, fetchCategories } = useCategories()
