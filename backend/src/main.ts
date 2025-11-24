@@ -6,6 +6,8 @@ import { categoriesRoutes } from "./modules/category/routes"
 import { cartRoutes } from "./modules/cart/routes"
 import { orderRoutes } from "./modules/order/routes"
 import { stripeWebhookRoutes, stripeFinalRoute } from "./modules/stripe/routes"
+import { db } from "./db"
+import { user } from "./db/schema/eccomerce/auth-schema"
 
 export const createCoreApi = () => {
     const app = new Elysia()
@@ -16,12 +18,19 @@ export const createCoreApi = () => {
     allowedHeaders: ["Content-Type, Authorization"]
   }))
   .get("/health", () => ({ status: "OK", message: "Server is running" }))
+  .decorate("db", db)
+  .get("/users", async ({ db }) => {
+    const data = await db.select().from(user)
+    return { success: true, data }
+  })
+  
 
   .mount(auth.handler)
   .use(productsRoutes)
   .use(categoriesRoutes)
   .use(cartRoutes)
   .use(orderRoutes)
+
   //.use(stripeWebhookRoutes)
   //.use(stripeFinalRoute)
 

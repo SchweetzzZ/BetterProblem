@@ -13,6 +13,7 @@ export default function AppRoutes() {
           <Route path="/cadastro" element={<CadastroPage/>}/>
           <Route path="categoria/:name" element={<CategoryPage/>}/>
           <Route path="ofertas" element={<p>Ofertas</p>}/>
+          <Route path="/usuario/:id" element={<p>Usuario</p>} />
         </Routes>
       </BrowserRouter>
     );

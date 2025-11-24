@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import type { CategoriesDropdownProps} from './categoryValidation'
+import type { CategoriesDropdownProps} from '../validation/categoryValidation'
 
 export function CategoriesDropdown({
   isOpen,

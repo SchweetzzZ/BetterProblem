@@ -16,7 +16,6 @@ export const CategoryPage = () => {
 
   useEffect(() => {
     const fetchCategory = async () => {
-      console.log('🔍 [DEBUG] Parâmetro name recebido:', name)
       
       if (!name) {
         setError('Nome da categoria não fornecido')
@@ -28,21 +27,14 @@ export const CategoryPage = () => {
       setError(null)
       
       try {
-        // ✅ USA A NOVA ROTA: /category/name/:name
         const url = `http://localhost:3000/category/name/${name}`
-        console.log('🌐 [DEBUG] Fazendo requisição para:', url)
-        
         const response = await fetch(url)
-        console.log('📡 [DEBUG] Status da resposta:', response.status, response.statusText)
         
         if (!response.ok) {
-          const errorText = await response.text()
-          console.log('❌ [DEBUG] Erro completo:', errorText)
           throw new Error(`Erro ${response.status}: ${response.statusText}`)
         }
         
         const result = await response.json()
-        console.log('✅ [DEBUG] Dados recebidos:', JSON.stringify(result, null, 2))
         
         if (result.success && result.data) {
           setCategory(result.data)
@@ -51,7 +43,6 @@ export const CategoryPage = () => {
         }
         
       } catch (error: any) {
-        console.error('💥 [DEBUG] Erro na requisição:', error)
         setError(`Falha ao carregar categoria: ${error.message}`)
       } finally {
         setIsLoading(false)
