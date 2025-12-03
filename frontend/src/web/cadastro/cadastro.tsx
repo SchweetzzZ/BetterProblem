@@ -1,4 +1,3 @@
-import './style.css'
 import { useState } from 'react'
 import { register } from '../../auth/hooks'
 import { useNavigate } from 'react-router-dom'
