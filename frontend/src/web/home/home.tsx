@@ -1,4 +1,3 @@
-import './homePage.css'
 import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -47,9 +46,9 @@ export const HomePage = () => {
   
 
   return (
-    <div className="backGroundGeralDaHome">
-      <header className="topBar">
-        <div className="searchRow">
+    <div className="bg-gradient-to-b from-black via-black to-white h-screen">
+      <header className="flex justify-between bg-[#fde400]">
+        <div className="flex ">
           <input className="busca" placeholder="Buscar produtos" type="search" />
         </div>
 
