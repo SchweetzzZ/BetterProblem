@@ -15,3 +15,4 @@ export const updateProductValidation = t.Partial(createProductValidation)
 export const idParamsValidation = t.Object({
     id: t.String() // Mude para String
   });
+  
