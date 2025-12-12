@@ -4,9 +4,9 @@ import { db } from "../../db"
 import { authSchema } from "../../db/schema/eccomerce/auth-schema"
 
 export const auth = betterAuth({
-    basepath: "/api/auth",
+    basePath: "/api/auth",
     trustHost: true,
-    trustedOrigins: ["http://localhost:5173"],
+    trustedOrigins: ["http://localhost:5173", "http://localhost:3000"],
     database: drizzleAdapter(db, {
         provider: "pg",
         schema: authSchema

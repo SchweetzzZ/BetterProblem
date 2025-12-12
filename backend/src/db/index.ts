@@ -1,5 +1,6 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
+import * as schema from "./index-Schemas"
 
 
 // Configuração da conexão com o PostgreSQL
@@ -12,6 +13,6 @@ const pool = new Pool({
 });
 
 // Exportar a instância do Drizzle ORM
-export const db = drizzle(pool);
+export const db = drizzle(pool, {schema});
 
 
