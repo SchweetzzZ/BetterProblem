@@ -31,7 +31,7 @@ export const updateCartController = async (ctx: Context<{params: IdParams, body:
     try {
         const { id } = ctx.params 
         const cartId = Number(id)
-
+        
         const update = await updateCart(cartId, ctx.body)
 
         ctx.set.status = 200

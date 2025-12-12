@@ -36,17 +36,16 @@ export const createOrder = async (order: CreateOrderInput) => {
         image: tableproducts.image 
     }).from(tableproducts).where(inArray(tableproducts.id, productIds))
 
-    if (existingProducts.length !== productIds.length) {
-        const existingId = existingProducts.map(product => product.id)
-        const missingIds = productIds.filter(id => !existingId.includes(id))
-        throw new Error(`Produtos não encontrados: ${missingIds.join(', ')}`);
-    }
+    const map = new Map(existingProducts.map(p => [p.id, p]));
 
-    for (const item of order.itens) {
-        const product = existingProducts.find(p => p.id === item.product_id)
-        if (product && Number(product.stock) < item.quantity) {
-            throw new Error(`Quantidade insuficiente para o produto ${item.product_id}`)
-        }
+    for (const { product_id, quantity } of order.itens) {
+        const product = map.get(product_id);
+
+        if (!product)
+            throw new Error(`Produto não encontrado: ${product_id}`);
+
+        if (product.stock < quantity)
+            throw new Error(`Estoque insuficiente: ${product_id}`);
     }
 
     const [newOrder] = await db.insert(tableOrder).values({
@@ -71,16 +70,50 @@ export const createOrder = async (order: CreateOrderInput) => {
 
     return newOrder
 }
-export const updateOrder = async (id: number, order: Partial<CreateOrderInput>) => {
-    const updatedOrder = await db.update(tableOrder).set({
-        user_id: order.user_id,
-        total: order.total?.toString(),
-        status: order.status || "pending",
-        itens: order.itens,
-        creat_at: new Date()
-    }).where(eq(tableOrder.id, id)).returning()
-    return updatedOrder[0]
-}
+export const updateOrder = async (id: number, data: Partial<CreateOrderInput>) => {
+    // 1. Buscar pedido existente
+    const [existing] = await db
+        .select()
+        .from(tableOrder)
+        .where(eq(tableOrder.id, id));
+
+    if (!existing) {
+        throw new Error("Pedido não encontrado");
+    }
+
+    // 2. Não permitir atualizar user_id (segurança)
+    if (data.user_id && data.user_id !== existing.user_id) {
+        throw new Error("Não é permitido alterar o usuário do pedido");
+    }
+
+    // 3. Validar itens (se enviados)
+    if (data.itens !== undefined) {
+        if (data.itens.length === 0) {
+            throw new Error("Pedido não pode ter lista de itens vazia");
+        }
+    }
+
+    // 4. Montar objeto final (somente campos enviados)
+    const updatePayload: any = {};
+
+    if (data.total !== undefined) updatePayload.total = data.total.toString();
+    if (data.status !== undefined) updatePayload.status = data.status;
+    if (data.itens !== undefined) updatePayload.itens = data.itens;
+
+    if (Object.keys(updatePayload).length === 0) {
+        throw new Error("Nenhum campo válido enviado para atualização");
+    }
+
+    // 5. Atualizar
+    const [updated] = await db
+        .update(tableOrder)
+        .set(updatePayload)
+        .where(eq(tableOrder.id, id))
+        .returning();
+
+    return updated;
+};
+
 
 export const deleteOrder = async (id: number) => {
     const deleted = await db.delete(tableOrder).where(eq(tableOrder.id, id)).returning()

@@ -8,7 +8,14 @@ interface CreateCategoryInput {
 }
 
 export const createCategory = async (category: CreateCategoryInput) => {
+
+    const verifyName = await db.select().from(tablecategories).where(eq(tablecategories.name, category.name))
+    if (verifyName.length > 0) {
+        throw new Error ("Category ja existe")
+    }
+
     const create = await db.insert(tablecategories).values(category).returning()
+
     if (!create || create.length === 0) {
         throw new Error ("Category não foi criada")
     }
@@ -16,6 +23,10 @@ export const createCategory = async (category: CreateCategoryInput) => {
 }
 
 export const updateCategory = async (id: number, category: Partial<CreateCategoryInput>) => {
+    const existing = await db.select().from(tablecategories).where(eq(tablecategories.id,id))
+    if (!existing || existing.length === 0) {
+        throw new Error("Category nao existe")
+    }
     const update = await db.update(tablecategories).set(category).where(eq(tablecategories.id,id)).returning()
     if (!update || update.length === 0) {
         throw new Error("Category não foi atualizada")

@@ -9,7 +9,8 @@ interface CreateCartInput {
     quantity: number
 }
 
-export const createCart = async (cart: CreateCartInput) => {
+export const createCart = async (cart: CreateCartInput) => {//adicionar transition depois.
+
     const product = await db.select().from(tableproducts).where(eq(tableproducts.id, cart.producuct_id))
     if (!product || product.length === 0) {
         throw new Error("Product nao existe")
@@ -17,7 +18,6 @@ export const createCart = async (cart: CreateCartInput) => {
     if (product[0].stock < cart.quantity) {
         throw new Error("Quantidade insuficiente")
     }
-
 
     const [existing] = await db.select().from(tablecart).where(and
     (eq(tablecart.user_id, cart.user_id), 
@@ -27,6 +27,13 @@ export const createCart = async (cart: CreateCartInput) => {
     // passar o userId obrigatoriamente (aqui vem do cart.user_id)
     const updated = await updateCart(existing.id, { quantity: existing.quantity + cart.quantity }, cart.user_id)
     return updated}
+
+    if (cart.quantity === 0) {
+        throw new Error("Quantidade nao pode ser 0")
+    }
+    if(cart.quantity < 0) {
+        throw new Error("Quantidade nao pode ser negativa")
+    }
 
     const create = await db.insert(tablecart).values(cart).returning()
     
