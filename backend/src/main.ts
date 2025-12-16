@@ -30,8 +30,8 @@ export const createCoreApi = () => {
   .use(categoriesRoutes)
   .use(cartRoutes)
   .use(orderRoutes)
-  .use(stripeWebhookRoutes)
-  .use(stripeFinalRoute)
+  //.use(stripeWebhookRoutes)
+  //.use(stripeFinalRoute)
 
   return app
 }
