@@ -9,6 +9,7 @@
       },
       "devDependencies": {
         "concurrently": "^7.6.0",
+        "esbuild": "0.25.12",
       },
     },
     "backend": {

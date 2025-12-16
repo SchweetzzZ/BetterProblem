@@ -13,7 +13,8 @@
         "install:all": "npm install"
     },
     "devDependencies": {
-        "concurrently": "^7.6.0"
+        "concurrently": "^7.6.0",
+        "esbuild": "0.25.12"
     },
     "dependencies": {
         "react-router-dom": "^7.9.6"
