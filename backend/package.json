@@ -18,7 +18,8 @@
     "@types/pg": "^8.15.5",
     "@types/stripe": "^8.0.417",
     "bun-types": "latest",
-    "drizzle-kit": "^0.31.6"
+    "drizzle-kit": "^0.31.6",
+    "esbuild": "0.18.20"
   },
   "module": "src/index.js"
 }
