@@ -24,7 +24,6 @@ export const createCoreApi = () => {
     return { success: true, data }
   })
   
-
   .mount(auth.handler)
   .use(productsRoutes)
   .use(categoriesRoutes)
