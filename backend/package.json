@@ -1,11 +1,10 @@
 {
   "name": "End_clone",
   "version": "1.0.50",
- "scripts": {
-  "dev": "bun run --watch src/server.ts",
-  "start": "bun run src/server.ts"
-}
-,
+  "scripts": {
+    "dev": "bun run --watch src/server.ts",
+    "start": "bun run src/server.ts"
+  },
   "dependencies": {
     "@elysiajs/cors": "^1.4.0",
     "@elysiajs/eden": "^1.4.5",
@@ -19,7 +18,7 @@
     "@types/pg": "^8.15.5",
     "@types/stripe": "^8.0.417",
     "bun-types": "latest",
-    "drizzle-kit": "^0.31.6",
+    "drizzle-kit": "^0.30.0",
     "esbuild": "0.18.20"
   },
   "module": "src/index.js"
