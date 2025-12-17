@@ -5,7 +5,7 @@ import { tableOrder } from "../../../db/schema/eccomerce/order";
 import { orderItens } from "../../../db/schema/eccomerce/order_items";
 import { eq, and, gte, sql } from "drizzle-orm";
 import { StripeService } from "../../stripe/service";
-import { CouponService } from "../../cupom/cuponService";
+import { CouponService } from "../../cupom/service";
 
 export const finalizarCompraService = async (user_id: string) => {
   console.log("Iniciando finalização de compra para usuário:", user_id);

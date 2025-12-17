@@ -13,6 +13,7 @@
     "start": "cd backend && bun run start"
   },
   "devDependencies": {
+    "bun-types": "^1.3.4",
     "concurrently": "^7.6.0"
   },
   "dependencies": {
