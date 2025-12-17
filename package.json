@@ -23,5 +23,8 @@
 
   "dependencies": {
     "react-router-dom": "^7.9.6"
+  },
+    "resolutions": {
+    "esbuild": "0.18.20"
   }
 }

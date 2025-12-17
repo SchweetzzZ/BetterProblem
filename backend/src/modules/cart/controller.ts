@@ -1,108 +1,122 @@
-import { createCart, updateCart, deletCart, getCartById, getAllCart } from "./service"
-import type { Context } from "elysia"
-import { createCartValidation, updateCartValidation, idParamsValidation } from "./cart.validation"
+import {
+  createCart,
+  updateCart,
+  deletCart,
+  getCartById,
+  getAllCart
+} from "./service";
 
-type createCartParams = typeof createCartValidation.static;
-type updateCartParams = typeof updateCartValidation.static;
-type IdParams = typeof idParamsValidation.static;
+export const creteCartController = async (context: any) => {
+  try {
+    const cart = await createCart(context.body);
+    
+    context.set.status = 201;
+    return {
+      success: true,
+      message: "Cart criado com sucesso",
+      data: cart
+    };
+  } catch (err: any) {
+    console.error(err);
+    
+    // Retorne erros específicos
+    if (err.message.includes("não existe") || err.message.includes("insuficiente")) {
+      context.set.status = 400;
+      return {
+        success: false,
+        message: err.message
+      };
+    }
+    
+    context.set.status = 500;
+    return {
+      success: false,
+      message: "Erro ao criar cart"
+    };
+  }
+};
 
-export const creteCartController = async (ctx: Context<{ body: createCartParams} >) => {
-    try {
-        const newCart = await createCart(ctx.body)
-        if (!newCart) {
-            throw new Error("Cart nao foi criado")
-        }
-        ctx.set.status = 201
-        return {
-        success: true,
-        message: "Cart criado com sucesso",
-        data: newCart
+export const updateCartController = async (context: any) => {
+  try {
+    const cart = await updateCart(
+      Number(context.params.id),
+      context.body,
+      context.body.user_id
+    );
+    
+    return {
+      success: true,
+      message: "Cart atualizado",
+      data: cart
+    };
+  } catch (err: any) {
+    console.error(err);
+    
+    if (err.message.includes("não existe") || err.message.includes("Sem permissão")) {
+      context.set.status = 400;
+      return {
+        success: false,
+        message: err.message
+      };
     }
-    } catch (err: any) {
-        console.error(`[creteCartController] Erro ao criar cart`, err)
-        ctx.set.status = 500
-        return {
-            success: false, message: "Erro interno ao criar cart", data: null,
-        }
-    }
-}
+    
+    context.set.status = 500;
+    return {
+      success: false,
+      message: "Erro ao atualizar cart"
+    };
+  }
+};
 
-export const updateCartController = async (ctx: Context<{params: IdParams, body: updateCartParams}>) => {
-    try {
-        const { id } = ctx.params 
-        const cartId = Number(id)
-        
-        const update = await updateCart(cartId, ctx.body)
+export const deletCartController = async (context: any) => {
+  try {
+    const cart = await deletCart(Number(context.params.id));
+    
+    return {
+      success: true,
+      message: "Cart deletado",
+      data: cart
+    };
+  } catch (err) {
+    console.error(err);
+    context.set.status = 500;
+    return {
+      success: false,
+      message: "Erro ao deletar cart"
+    };
+  }
+};
 
-        ctx.set.status = 200
-        return {
-        success: true,
-        message: "Cart atualizado com sucesso",
-        data: update
-    }
-    } catch (err: any) {
-        console.error(`[updateCartController] Erro ao atualizar cart`, err)
-        ctx.set.status = 500
-        return {
-            success: false, message: "Erro interno ao atualizar cart", data: null,
-        }
-    }
-}
-export const deletCartController = async (ctx: Context<{params: IdParams}>) => {
-    try {
-        const { id } = ctx.params
-        //const cartId = Number(id)
-        const delet = await deletCart(id)
-        ctx.set.status = 200
-        return {
-            success: true,
-            message: "Cart deletado com sucesso",
-            data: delet
-        }
-    } catch (err: any) {
-        console.error(`[deletCartController] Erro ao deletar cart`, err)
-        ctx.set.status = 500
-        return {
-            success: false, message: "Erro interno ao deletar cart", data: null,
-        }
-    }
-}
-export const getCartByIdController = async (ctx: Context<{params: IdParams}>) => {
-    try {
-         const { id } = ctx.params
-         const getCartId = await getCartById(id)
-         ctx.set.status = 200
-         return {
-            success: true,
-            message: "Cart encontrado com sucesso",
-            data: getCartId
-        }
-
-    } catch (err: any) {
-        console.error(`[getCartByIdController] Erro ao buscar cart`, err)
-        ctx.set.status = 500
-        return {
-            success: false, message: "Erro interno ao buscar cart", data: null,
-        }
-    }
-}
-export const getAllCartController = async (ctx: Context) => {
-    try {
-        const result = await getAllCart()
-        if (!result) {
-            throw new Error("Cart nao foi encontrado")
-        }
-        ctx.set.status = 200
-        return {
-        success: true,
-        message: "Cart encontrado com sucesso",
-        data: result
-    }
-    } catch (err: any) {
-        console.error(`[getAllCartController] Erro ao buscar cart`, err)
-        ctx.set.status = 500
-        return {
-            success: false, message: "Erro interno ao buscar cart", data: null,
-        }
-    }
-}
+export const getCartByIdController = async (context: any) => {
+  try {
+    const cart = await getCartById(Number(context.params.id));
+    
+    return {
+      success: true,
+      data: cart
+    };
+  } catch (err) {
+    console.error(err);
+    context.set.status = 500;
+    return {
+      success: false,
+      message: "Erro ao buscar cart"
+    };
+  }
+};
+export const getAllCartController = async ({ set }: any) => {
+  try {
+    const carts = await getAllCart();
+    return {
+      success: true,
+      data: carts
+    };
+  } catch (err) {
+    console.error(err);
+    set.status = 500;
+    return {
+      success: false,
+      message: "Erro ao buscar todos os carts"
+    };
+  }
+};

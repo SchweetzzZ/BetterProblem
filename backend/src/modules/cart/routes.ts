@@ -1,11 +1,11 @@
-import { creteCartController, deletCartController, 
+import { creteCartController, deletCartController, updateCartController,
     getCartByIdController, getAllCartController } from "./controller";
 import { Elysia } from "elysia";
-import { createCartValidation, idParamsValidation } from "./cart.validation";
+import { createCartValidation, idParamsValidation, updateCartValidation } from "./cart.validation";
 
 export const cartRoutes = (app: Elysia) => app
     .post("/cart", creteCartController, {body: createCartValidation})
-    //.put("/cart/:id", updateCartController, {body: updateCartValidation, params: idParamsValidation})
+    .put("/cart/:id", updateCartController, {body: updateCartValidation, params: idParamsValidation})
     .delete("/cart/:id", deletCartController, {params: idParamsValidation})
     .get("/cart/:id", getCartByIdController, {params: idParamsValidation})
     .get("/cart", getAllCartController)
