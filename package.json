@@ -2,29 +2,23 @@
   "name": "betterproblem",
   "version": "1.0.0",
   "private": true,
-
   "engines": {
     "node": "20.x"
   },
-
   "workspaces": [
     "backend",
     "frontend"
   ],
-
   "scripts": {
-    "start": "bun run --filter backend start"
+    "start": "cd backend && bun run start"
   },
-
-
   "devDependencies": {
     "concurrently": "^7.6.0"
   },
-
   "dependencies": {
     "react-router-dom": "^7.9.6"
   },
-    "resolutions": {
+  "resolutions": {
     "esbuild": "0.18.20"
   }
 }
