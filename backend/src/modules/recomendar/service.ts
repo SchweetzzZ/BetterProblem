@@ -41,7 +41,7 @@ export const getUserRecommendations = async (userId: string) => {
     return products
 }
 
- //GERAR SIMILARIDADE AUTOMÁTICA POR CATEGORIA
+ //similaridade por categoria
 export const generateSimilarities = async () => {
   const products = await db.select().from(tableproducts)
 
@@ -62,7 +62,7 @@ export const generateSimilarities = async () => {
   return { success: true, message: "Similaridades geradas com sucesso" }
 }
 
-// BUSCAR PRODUTOS PARECIDOS
+// produtos parecidos
 export const getSimilarProducts = async (itemId: number) => {
   const similars = await db
     .select()

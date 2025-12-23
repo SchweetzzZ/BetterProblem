@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { login } from '../../auth/hooks' // ajuste o caminho conforme sua estrutura
+import { login } from '../../auth/hooks' 
 import { useNavigate } from 'react-router-dom'
 
 export default function LoginPage() {
@@ -16,7 +16,7 @@ export default function LoginPage() {
         
         try {
             await login(email, password)
-            navigate('/') // Redireciona após login
+            navigate('/')
         } catch (err: any) {
             setError(err.message)
         } finally {

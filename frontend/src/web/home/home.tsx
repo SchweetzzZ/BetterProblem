@@ -22,7 +22,7 @@ export const HomePage = () => {
     setIsCategoryOpen(false)
   }, [])
 
-  //=====USUARIOS======
+  //USUARIOS
 
   const {
     users,
@@ -47,10 +47,9 @@ export const HomePage = () => {
 
   return (
     <div className="bg-linear-to-b from-black via-black to-white h-screen">
-      <header className="flex flex-col justify-content-center items-center bg-[#fde400]">
-        {/* Container principal para logo e input na mesma linha */}
+      <header className="flex flex-col justify-content-center items-center bg-gray-700">
+
         <div className="flex items-center justify-between w-full max-w-6xl py-4">
-          {/* Logo à esquerda */}
           <div className="flex-1">
             <a 
               href="https://www.mercadolivre.com.br/assinaturas/melimais/planos?plan
@@ -68,7 +67,6 @@ MELIMAISMEGAALL_SEG_1311&me.flow=-1&me.logic=user_journey&me.position=0"
             </a>
           </div>
 
-          {/* Input no meio com margem */}
           <div className="flex-1 flex justify-center">
             <input 
               className="w-full max-w-lg h-12 px-4 rounded-lg bg-white text-lg border border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
@@ -77,11 +75,9 @@ MELIMAISMEGAALL_SEG_1311&me.flow=-1&me.logic=user_journey&me.position=0"
             />
           </div>
 
-          {/* Espaço vazio à direita para balancear */}
           <div className="flex-1"></div>
         </div>
 
-        {/* Menu de navegação */}
         <div className="flex justify-center items-center gap-8 py-4 w-full max-w-6xl">
           <CategoriesDropdown
             isOpen={isCategoryOpen}

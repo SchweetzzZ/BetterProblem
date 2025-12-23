@@ -8,6 +8,7 @@ import { orderRoutes } from "./modules/order/routes"
 import { stripeWebhookRoutes, stripeFinalRoute } from "./modules/stripe/routes"
 import { db } from "./db"
 import { user } from "./db/schema/eccomerce/auth-schema"
+import {swaggerModule} from "./modules/swagger"
 
 export const createCoreApi = () => {
     const app = new Elysia()
@@ -23,7 +24,7 @@ export const createCoreApi = () => {
     const data = await db.select().from(user)
     return { success: true, data }
   })
-  
+  .use(swaggerModule)
   .mount(auth.handler)
   .use(productsRoutes)
   .use(categoriesRoutes)
@@ -34,4 +35,4 @@ export const createCoreApi = () => {
 
   return app
 }
-export type Coreapi = Awaited<ReturnType<typeof createCoreApi>>//precisa chamar uma função.
+export type Coreapi = Awaited<ReturnType<typeof createCoreApi>>//precisa chamar uma função
