@@ -2,7 +2,7 @@ import { db } from '../../db';
 import { tableOrder } from '../../db/schema/eccomerce/order';
 import { tableproducts } from '../../db/schema/eccomerce/products';
 import { orderItens } from '../../db/schema/eccomerce/order_items';
-import { eq, inArray } from 'drizzle-orm';
+import { eq, inArray, and} from 'drizzle-orm';
 
 
 interface CreateOrderInput {
@@ -13,7 +13,7 @@ interface CreateOrderInput {
 }
 
 export interface OrderItem {
-    product_id: number
+    product_id: string
     quantity: number
     price: number
 }
@@ -21,7 +21,7 @@ export interface OrderItem {
 export type OrderStatus = "pending" | "completed" | "cancelled" | "shipped" | "delivered" | "cancelled"
 
 
-export const createOrder = async (order: CreateOrderInput) => {
+export const createOrder = async (user_id: string, order: CreateOrderInput) => {
     if (!order.itens || order.itens.length === 0) {
         throw new Error("Itens do pedido não fornecidos")
     }
@@ -70,7 +70,7 @@ export const createOrder = async (order: CreateOrderInput) => {
 
     return newOrder
 }
-export const updateOrder = async (id: number, data: Partial<CreateOrderInput>) => {
+export const updateOrder = async (id: string, data: Partial<CreateOrderInput>, user_id: string) => {
     // 1. Buscar pedido existente
     const [existing] = await db
         .select()
@@ -115,7 +115,7 @@ export const updateOrder = async (id: number, data: Partial<CreateOrderInput>) =
 };
 
 
-export const deleteOrder = async (id: number) => {
+export const deleteOrder = async (id: string, user_id: string) => {
     const deleted = await db.delete(tableOrder).where(eq(tableOrder.id, id)).returning()
 
     if (!deleted || deleted.length === 0) {
@@ -125,8 +125,8 @@ export const deleteOrder = async (id: number) => {
     return deleted
 }
 
-export const getOrdersById = async (id: number) => {
-    const result = await db.select().from(tableOrder).where(eq(tableOrder.id, id))
+export const getOrdersByUserId = async (id: string, user_id: string) => {
+    const result = await db.select().from(tableOrder).where(and(eq(tableOrder.id, id),eq(tableOrder.user_id, user_id)))
 
     if (!result || result.length === 0) {
         throw new Error("Pedido nao encontrado")

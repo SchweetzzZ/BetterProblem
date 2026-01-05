@@ -2,14 +2,15 @@ import { db } from "../../db"
 import { tablecart } from "../../db/schema/eccomerce/cart"
 import { tableproducts } from "../../db/schema/eccomerce/products"
 import { eq, and } from "drizzle-orm"
+import { sql } from "drizzle-orm"
 
 interface CreateCartInput {
   user_id: string
-  producuct_id: number
+  producuct_id: string
   quantity: number
 }
 
-export const createCart = async (cart: CreateCartInput) => {
+export const createCart = async (user_id: string, cart: CreateCartInput) => {
   const product = await db
     .select()
     .from(tableproducts)
@@ -59,7 +60,7 @@ export const createCart = async (cart: CreateCartInput) => {
 }
 
 export const updateCart = async (
-  id: number,
+  id: string,
   data: Partial<CreateCartInput>,
   userId: string
 ) => {
@@ -107,12 +108,18 @@ export const getAllCart = async () => {
   return carts
 }
 
-export const getCartById = async (id: number) => {
-  const cart = await db.select().from(tablecart).where(eq(tablecart.id, id))
+export const getCartByUSerId = async (id: string, userId: string) => {
+  const cart = await db.select().from(tablecart).where(and(eq(tablecart.id, id),eq(tablecart.user_id, userId)))
+  if(!cart || cart.length === 0){
+    throw new Error("Cart nao encontrado")
+  }
   return cart
 }
 
-export const deletCart = async (id: number) => {
+export const deletCart = async (id: string, userId: string) => {
   const deleted = await db.delete(tablecart).where(eq(tablecart.id, id))
+  if(!deleted){
+    throw new Error("Cart nao encontrado")
+  }
   return deleted
 }

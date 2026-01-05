@@ -1,7 +1,8 @@
-import { pgTable, serial, text, integer, timestamp, numeric, boolean, varchar } from "drizzle-orm/pg-core"
+import { pgTable, text, integer, timestamp, numeric, boolean, varchar, uuid } from "drizzle-orm/pg-core"
+import { sql } from "drizzle-orm"
 
 export const tablecupons = pgTable("cupons", {
-    id: serial("id").primaryKey(),
+    id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
     code: varchar("code").notNull(),
     discount_percent: numeric("discount_percent"),//descontar a partir de %
     discount_value: numeric("discount_value"),//descontar a partir de valor

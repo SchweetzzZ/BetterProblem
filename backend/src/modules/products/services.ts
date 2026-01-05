@@ -1,6 +1,6 @@
 import { db } from '../../db';
 import { tableproducts } from '../../db/schema/eccomerce/products';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 
 export type CreateProductInput = {
   nome: string
@@ -10,16 +10,18 @@ export type CreateProductInput = {
   stock: number
   category: string
 }
-export const test = () => {
-    console.log("test")
-}
 
-export const createProduct = async (product: CreateProductInput) => {
+export const createProduct = async (user_id: string, product: CreateProductInput) => {
   const create = await db
     .insert(tableproducts)
     .values({
-      ...product,
+      nome: product.nome,
+      user_id: user_id,
       price: product.price.toString(),
+      description: product.description,
+      image: product.image,
+      stock: product.stock,
+      category: product.category,
     })
     .returning();
 
@@ -30,7 +32,7 @@ export const createProduct = async (product: CreateProductInput) => {
   return create[0] ?? null;
 }
 
-export const updateProduct = async (id: number, product: Partial<CreateProductInput>) => {
+export const updateProduct = async (id: string, userId: string,product: Partial<CreateProductInput>) => {
   const updateData: any = {};
   
   if (product.nome !== undefined) updateData.nome = product.nome;
@@ -43,7 +45,9 @@ export const updateProduct = async (id: number, product: Partial<CreateProductIn
   const update = await db
     .update(tableproducts)
     .set(updateData)
-    .where(eq(tableproducts.id, id))
+    .where(and(
+      eq(tableproducts.id, id), 
+      eq(tableproducts.user_id, userId)))
     .returning()
 
   if (!update || update.length === 0) {
@@ -56,7 +60,7 @@ export const updateProduct = async (id: number, product: Partial<CreateProductIn
     data: update[0] ?? null
   }
 }
-
+//do publico
 export const gettAllProducts = async () => {
   const result = await db.select().from(tableproducts)
   if (!result || result.length === 0) {
@@ -64,17 +68,20 @@ export const gettAllProducts = async () => {
   }
   return result
 }
-
-export const getProductById = async (id: number) => {
-  const result = await db.select().from(tableproducts).where(eq(tableproducts.id, id))
+//do vendedor
+export const getProductByUserId = async (id: string, userId: string) => {
+  const result = await db.select().from(tableproducts).where(and(eq(tableproducts.id, id),eq(tableproducts.user_id, userId)))
   if (!result || result.length === 0) {
     throw new Error("Produto nao encontrado")
   }
   return result
 }
 
-export const deletProducts = async (id: number) => {
-  const deleted = await db.delete(tableproducts).where(eq(tableproducts.id, id)).returning()
+export const deletProducts = async (id: string, userId: string) => {
+  const deleted = await db.delete(tableproducts).where(and(
+  eq(tableproducts.id, id), 
+  eq(tableproducts.user_id, userId)))
+  .returning()
 
   if (!deleted || deleted.length === 0) {
     throw new Error("Product not found or not deleted");

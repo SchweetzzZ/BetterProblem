@@ -8,8 +8,5 @@ export const createCategoryValidation = t.Object({
 export const updateCategoryValidation = t.Partial(createCategoryValidation);
 
 export const idParamsValidation = t.Object({
-    id: t.Numeric()
+    id: t.String()
 });
-export const nameParamsValidation = t.Object({
-    name: t.String()
-})

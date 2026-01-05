@@ -5,12 +5,12 @@ import * as schema from "./index-Schemas"
 
 // Configuração da conexão com o PostgreSQL
 const pool = new Pool({
-  host: process.env.PG_HOST || 'localhost',
-  port: parseInt(process.env.PG_PORT || '5432'),
-  user: process.env.PG_USER || 'postgres',
-  password: process.env.PG_PASSWORD || 'polegadas5000',
-  database: process.env.PG_DB || 'comercegres',
-});
+    host: process.env.PG_HOST,
+    port: Number(process.env.PG_PORT),
+    user: process.env.PG_USER,
+    password: process.env.PG_PASSWORD,
+    database: process.env.PG_DATABASE,
+})
 
 // Exportar a instância do Drizzle ORM
 export const db = drizzle(pool, {schema});

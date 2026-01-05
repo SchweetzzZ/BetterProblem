@@ -11,7 +11,7 @@ export const swaggerModule = (app: Elysia) =>
           description: "API for BetterProblem"
         },
         tags: [
-          { name: "Products", description: "Products routes" },
+          { name: "Products", description: "Products routes teste" },
           { name: "Users", description: "Users routes" },
           { name: "Auth", description: "Auth routes" },
           { name: "Orders", description: "Orders routes" },
