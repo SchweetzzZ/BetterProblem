@@ -1,13 +1,14 @@
 import { t } from "elysia";
 
 export const createCartValidation = t.Object({
-    user_id: t.String(),
-    producuct_id: t.String({minLength: 1}),//minLength vai fazer nao ter negativos
-    quantity: t.Integer({minLength: 1}),//minLength vai fazer nao ter negativos
-})
+    producuct_id: t.String({ minLength: 1 }),
+    quantity: t.Integer({ minimum: 1 }),
+});
 
-export const updateCartValidation = t.Partial(createCartValidation)
+export const updateCartValidation = t.Object({
+    quantity: t.Integer({ minimum: 0 }),
+});
 
 export const idParamsValidation = t.Object({
     id: t.String(),
-})
+});

@@ -4,14 +4,14 @@ import { eq } from "drizzle-orm";
 import { tableOrder } from "../../db/schema/eccomerce/order";
 
 interface PaymentItem {
-  product_id: number;
+  product_id: string; 
   name: string;
   price: number;
   quantity: number;
 }
 
 export class StripeService {
-  static async createCheckoutSession(orderId: number, items: PaymentItem[]) {
+  static async createCheckoutSession(orderId: string, items: PaymentItem[]) { 
     console.log("Criando sessão de pagamento para orderId:", orderId);
 
     if (!items || items.length === 0) {
@@ -26,14 +26,22 @@ export class StripeService {
         line_items: items.map((item) => ({
           price_data: {
             currency: "brl",
-            product_data: { name: item.name },
+            product_data: { 
+              name: item.name,
+              metadata: {
+                product_id: item.product_id
+              }
+            },
             unit_amount: Math.round(item.price * 100),
           },
           quantity: item.quantity,
         })),
-        client_reference_id: orderId.toString(),
+        client_reference_id: orderId,
         success_url: process.env.SUCCESS_URL,
         cancel_url: process.env.CANCEL_URL,
+        metadata: {
+          order_id: orderId,
+        },
       });
 
       console.log(" Sessão Stripe criada com sucesso:", session.id);
@@ -60,7 +68,7 @@ export class StripeService {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as any;
-        const orderId = Number(session.client_reference_id);
+        const orderId = session.client_reference_id;
 
         console.log(`Pagamento confirmado pela Stripe para pedido ${orderId}`);
 

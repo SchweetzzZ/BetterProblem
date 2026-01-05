@@ -1,9 +1,7 @@
-
 import { Elysia } from "elysia";
 import { createCartValidation, idParamsValidation, updateCartValidation } from "./cart.validation";
 import {createCart, updateCart, deletCart, getCartByUSerId} from "./service"
 import {auth} from "../../modules/auth/auth"
-import { success } from "better-auth/*";
 
 export const cartRoutes = (app: Elysia) => app
     .post("/cart", async({body, set, request})=>{
@@ -33,6 +31,10 @@ export const cartRoutes = (app: Elysia) => app
                 headers: request.headers
             })
             if(!session){
+                set.status=401
+                return {success: false, message:"Unauthorized"}
+            }
+            if(session.user.roles !== "admin" && session.user.id !== params.id){
                 set.status=401
                 return {success: false, message:"Unauthorized"}
             }

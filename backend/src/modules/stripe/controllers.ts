@@ -9,7 +9,6 @@ export const createCheckoutSessionController = async (ctx: Context<{ body: Check
   try {
     const { user_id } = ctx.body; 
 
-    // Chama o service correto que processa o carrinho
     const result = await finalizarCompraService(user_id);
 
     ctx.set.status = 201;
@@ -31,7 +30,6 @@ export const createCheckoutSessionController = async (ctx: Context<{ body: Check
   }
 }
 
-// O handleWebhookController está correto, mantenha como está
 export const handleWebhookController = async (ctx: Context) => {
   try {
     const signature = ctx.headers['stripe-signature'];

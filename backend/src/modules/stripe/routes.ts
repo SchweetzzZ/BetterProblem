@@ -16,7 +16,6 @@ export const stripeWebhookRoutes = (app: Elysia) =>
     "/webhook",
     handleWebhookController,
     {
-      // stripeWebhookValidation existe agora
       headers: stripeWebhookValidation.headers
     }
   );

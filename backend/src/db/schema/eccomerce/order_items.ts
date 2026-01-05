@@ -8,5 +8,5 @@ export const orderItens = pgTable("order_items", {
     order_id: uuid("order_id").notNull().references(() => tableOrder.id, {onDelete: "cascade"}),
     product_id: uuid("product_id").notNull().references(() => tableproducts.id),
     quantity: integer("quantity").notNull(),
-    price: decimal("price", {precision: 10, scale: 2}).notNull(),
+    price: decimal("price", {precision: 10, scale: 2, mode: "number"}).notNull(),
 })

@@ -14,7 +14,6 @@ export const finalizarCompraService = async (user_id: string) => {
     const result = await db.transaction(async (tx) => {
       console.log("Buscando carrinho do usuário...");
 
-      // Busca o carrinho
       const resultCart = await tx
         .select()
         .from(tablecart)
@@ -27,7 +26,6 @@ export const finalizarCompraService = async (user_id: string) => {
 
       console.log(`${resultCart.length} item(ns) encontrado(s) no carrinho.`);
 
-      //  Valida estoque e calcula total
       let total = 0;
 
       for (const item of resultCart) {
@@ -62,14 +60,13 @@ export const finalizarCompraService = async (user_id: string) => {
 
       console.log("Total calculado:", total);
 
-      let descont = 0
+      let descont = 0;
 
-      const coupon = await CouponService.validate("", total)
-      descont = CouponService.calcDiscount(total, coupon)
-      total = Math.max(0, total - descont)
-      await CouponService.incrementUse(coupon.id)
+      const coupon = await CouponService.validate("", Number(total));
+      descont = CouponService.calcDiscount(Number(total), coupon);
+      total = Math.max(0, total - descont);
+      await CouponService.incrementUse(coupon.id);
 
-      // Monta os itens para salvar no pedido
       console.log("Montando itens do pedido...");
       const itensJSON = await Promise.all(
         resultCart.map(async (item) => {
@@ -87,13 +84,12 @@ export const finalizarCompraService = async (user_id: string) => {
         })
       );
 
-      //  Cria o pedido
-      console.log(" Criando pedido no banco...");
+      console.log("Criando pedido no banco...");
       const [order] = await tx
         .insert(tableOrder)
         .values({
           user_id,
-          total: total.toFixed(2),
+          total: Number(total.toFixed(2)),
           status: "pending",
           itens: itensJSON,
           creat_at: new Date(),
@@ -102,22 +98,19 @@ export const finalizarCompraService = async (user_id: string) => {
 
       console.log("Pedido criado com ID:", order.id);
 
-      //  Cria registros de itens
       const orderItemsData = itensJSON.map((item) => ({
         order_id: order.id,
         product_id: item.product_id,
         quantity: item.quantity,
-        price: item.price.toString(),
+        price: Number(item.price),
       }));
 
       console.log(`Inserindo ${orderItemsData.length} item(ns) em order_items...`);
       await tx.insert(orderItens).values(orderItemsData);
 
-      // Limpa o carrinho
       console.log("Limpando carrinho do usuário...");
       await tx.delete(tablecart).where(eq(tablecart.user_id, user_id));
 
-      // Cria sessão Stripe
       console.log("Criando sessão de pagamento na Stripe...");
       const stripeSession = await StripeService.createCheckoutSession(
         order.id,
@@ -131,12 +124,11 @@ export const finalizarCompraService = async (user_id: string) => {
 
       console.log("Sessão Stripe criada com sucesso:", stripeSession.url);
 
-      // Retorna sucesso
       return {
         success: true,
         message: "Pedido criado e sessão de pagamento iniciada com sucesso!",
         order_id: order.id,
-        total: total.toFixed(2),
+        total: Number(total.toFixed(2)),
         checkoutUrl: stripeSession.url,
       };
     });
