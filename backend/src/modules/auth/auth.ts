@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { db } from "../../db"
 import { authSchema } from "../../db/schema/eccomerce/auth-schema"
+import { Session } from "better-auth"
 
 export const auth = betterAuth({
     basePath: "/api/auth",
